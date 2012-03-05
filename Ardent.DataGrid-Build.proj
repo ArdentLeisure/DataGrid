@@ -1,0 +1,36 @@
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+
+    <PropertyGroup>
+        <VersionMajor>0</VersionMajor>
+        <VersionMinor>1</VersionMinor>
+    </PropertyGroup>
+
+    <Target Name="Build">
+
+        <TfsVersion
+		  TfsLibraryLocation="C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\ReferenceAssemblies\v2.0"
+		  LocalPath="$(MSBuildProjectDirectory)">
+            <Output TaskParameter="Changeset" PropertyName="ChangesetNumber"/>
+        </TfsVersion>
+
+        <MSBuild
+            Projects="$(MSBuildProjectDirectory)\Ardent.DataGrid\Ardent.DataGrid.csproj"
+            Targets="Build"
+			Properties="Configuration=Debug;
+      OutDir=$(MSBuildProjectDirectory)\Ardent.DataGrid\Bin\Release\;
+			ApplicationVersion=$(VersionMajor).$(VersionMinor).$(ChangesetNumber)" />
+
+        <!--NuGet stuff-->
+        <Message Text="C:\NuGet\NuGet.exe pack $(MSBuildProjectDirectory)\Ardent.DataGrid.nuspec -Version $(VersionMajor).$(VersionMinor).$(ChangesetNumber)" />
+
+        <Exec Command="C:\NuGet\NuGet.exe pack $(MSBuildProjectDirectory)\Ardent.DataGrid.nuspec -Version $(VersionMajor).$(VersionMinor).$(ChangesetNumber)"></Exec>
+
+        <Exec Command="C:\WINDOWS\system32\xcopy $(MSBuildProjectDirectory)\Ardent.DataGrid.$(VersionMajor).$(VersionMinor).$(ChangesetNumber).nupkg \\grp-dev02\f$\Websites\Ardent.NuGet\Packages"></Exec>
+        
+        <Exec Command="C:\NuGet\NuGet.exe setApiKey ##NUGET KEY##"></Exec>
+        <Exec Command="C:\NuGet\NuGet.exe push Ardent.DataGrid.$(VersionMajor).$(VersionMinor).$(ChangesetNumber).nupkg"></Exec>
+
+    </Target>
+
+</Project>

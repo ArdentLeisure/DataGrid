@@ -5,6 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ardent.DataGrid", "Ardent.D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0D17A858-BB75-43F7-ABC2-3A1B5525ABAB}"
 	ProjectSection(SolutionItems) = preProject
+		Ardent.DataGrid-Build.proj = Ardent.DataGrid-Build.proj
 		Ardent.DataGrid.nuspec = Ardent.DataGrid.nuspec
 	EndProjectSection
 EndProject
@@ -16,6 +17,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{91F8
 	EndProjectSection
 EndProject
 Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://mlol-dev01-srv:8080/tfs/ardentcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Ardent.DataGrid\\Ardent.DataGrid.csproj
+		SccProjectName1 = Ardent.DataGrid
+		SccLocalPath1 = Ardent.DataGrid
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

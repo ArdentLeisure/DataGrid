@@ -10,13 +10,13 @@
 		<projectUrl>https://github.com/ArdentLeisure/DataGrid</projectUrl>
 		<tags>Datagrid</tags>
         <dependencies>
-            <dependency id="System.Dynamic.Linq" />
+            <dependency id="System.Linq.Dynamic" />
         </dependencies>
 	</metadata>
 	<files>
         <file src="Ardent.DataGrid\bin\Release\Ardent.DataGrid.dll" target="lib\net35" />
         <file src="Ardent.DataGrid\Scripts\DataGrid.js" target="content\Scripts" />
-        <file src="Ardent.DataGrid\Views\DataGrid.cshtml" target="content\Views" />
-        <file src="Ardent.DataGrid\Controllers\DataGrid.cshtml" target="content\Controllers" />
+        <file src="Ardent.DataGrid\Views\DataGrid.cshtml" target="content\Views\Shared" />
+        <file src="Ardent.DataGrid\Controllers\DataGridController.cs.pp" target="content\Controllers" />
 	</files>
 </package>
