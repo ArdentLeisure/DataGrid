@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+	<metadata>
+		<id>Ardent.DataGrid</id>
+		<version>0.1</version>
+		<authors>Damian Karzon, Ardent Leisure</authors>
+		<owners>Damian Karzon</owners>
+		<description>Generic Data Grid</description>
+		<language>en-AU</language>
+		<projectUrl>https://github.com/ArdentLeisure/DataGrid</projectUrl>
+		<tags>Datagrid</tags>
+        <dependencies>
+            <dependency id="System.Dynamic.Linq" />
+        </dependencies>
+	</metadata>
+	<files>
+        <file src="Ardent.DataGrid\bin\Release\Ardent.DataGrid.dll" target="lib\net35" />
+        <file src="Ardent.DataGrid\Scripts\DataGrid.js" target="content\Scripts" />
+        <file src="Ardent.DataGrid\Views\DataGrid.cshtml" target="content\Views" />
+        <file src="Ardent.DataGrid\Controllers\DataGrid.cshtml" target="content\Controllers" />
+	</files>
+</package>

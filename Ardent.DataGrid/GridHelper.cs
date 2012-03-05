@@ -15,9 +15,14 @@ namespace Ardent.DataGrid
             var ass = db.GetType().Assembly; //haha ass
 
             Type dbType = ass.GetType(type);
-            
+
             var items = (IQueryable)db.GetType().GetMethod("GetTable").MakeGenericMethod(dbType).Invoke(db, null);
 
+            return GetData(items, columns, page, count, filter, sort, sortdir);
+        }
+
+        public static GridDataModel GetData(IQueryable items, string columns, int page, int count, List<string> filter, string sort, string sortdir)
+        {
             var columnsSplit = columns.Split(',').ToList();
             
             var gridData = new GridDataModel();
