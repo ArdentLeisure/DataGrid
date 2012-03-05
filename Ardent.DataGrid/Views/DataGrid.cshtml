@@ -1,0 +1,55 @@
+﻿@model MvcDataGrid.DataGridViewModel
+
+<script id="datagrid-template" type="text/html">
+    <tr>
+        <td>
+            <a href="@(string.Format(Model.EditLinkFormat, "${" + Model.GetIdentifierColumn() + "}"))">@(Model.EditLinkText)</a>
+        </td>
+        @foreach (var column in Model.Columns)
+        {
+            <td>
+            ${@(column.Replace(".", "_"))}
+            </td> 
+        }
+    </tr>
+</script>
+
+<script type="text/javascript">
+    DataGridJS = new DataGridJS('@Model.Type', '@Model.ColumnsString');
+
+    $(document).ready(function ($) {
+        DataGridJS.GetData(1, @Model.PageCount);
+    });
+</script>
+
+
+
+<table id="datagrid" class="wickedtable">
+    <thead id="datagrid-head">
+        <th></th>
+        @for (int i = 0; i < Model.Columns.Count; i++)
+        {
+            <th @(Model.GetColumnWidth(i).HasValue ? string.Format("style=\"width: {0}px\"", Model.GetColumnWidth(i)) : string.Empty)>
+                <div class="pointer" onclick="DataGridJS.Sort('@(Model.Columns[i])')">
+                    @Model.Columns[i].Replace(".", " ")
+                </div>
+                <input class="datagrid-filter" type="text" id="datagrid-filter-@(i)" />
+            </th>
+        }
+    </thead>
+    <tbody id="datagrid-body"></tbody>
+    <tfoot>
+        <tr id="datagrid-loader">
+            <td colspan="@(Model.Columns.Count + 1)">
+                <img src="@Url.Content("~/Public/img/loading.gif")" />
+            </td>
+        </tr>
+        <tr id="datagrid-pager">
+            <td colspan="@(Model.Columns.Count + 1)">
+                <button onclick="DataGridJS.PreviousPage();return false;"> Prev </button>
+                <label id="datagrid-pager-label"></label>
+                <button onclick="DataGridJS.NextPage();return false;"> Next </button>
+            </td>
+        </tr>
+    </tfoot>
+</table>
