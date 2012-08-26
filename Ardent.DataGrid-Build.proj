@@ -8,8 +8,8 @@
 
     <Target Name="Build">
 
-        <TfsVersion
-		  TfsLibraryLocation="C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\ReferenceAssemblies\v2.0"
+      <TfsVersion
+      TfsLibraryLocation="C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\ReferenceAssemblies\v2.0"
 		  LocalPath="$(MSBuildProjectDirectory)">
             <Output TaskParameter="Changeset" PropertyName="ChangesetNumber"/>
         </TfsVersion>
@@ -28,7 +28,6 @@
 
         <Exec Command="C:\WINDOWS\system32\xcopy $(MSBuildProjectDirectory)\Ardent.DataGrid.$(VersionMajor).$(VersionMinor).$(ChangesetNumber).nupkg \\grp-dev02\f$\Websites\Ardent.NuGet\Packages"></Exec>
         
-        <Exec Command="C:\NuGet\NuGet.exe setApiKey ##NUGET KEY##"></Exec>
         <Exec Command="C:\NuGet\NuGet.exe push Ardent.DataGrid.$(VersionMajor).$(VersionMinor).$(ChangesetNumber).nupkg"></Exec>
 
     </Target>

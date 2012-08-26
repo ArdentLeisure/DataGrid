@@ -27,13 +27,24 @@ namespace Ardent.DataGrid
             
             var gridData = new GridDataModel();
 
-            //Filtering
-            if (filter != null)
+            //Sorting
+            if (!string.IsNullOrWhiteSpace(sort))
             {
-                items = items.Filter(columnsSplit, filter);
+                if (string.IsNullOrWhiteSpace(sortdir))
+                {
+                    sortdir = "asc";
+                }
+                items = items.OrderBy(sort + " " + sortdir);
             }
 
-            gridData.TotalRows = items.Count();
+            //Filtering
+            if (filter == null)
+            {
+                filter = new List<string>();
+            }
+            var filteredData = items.Filter(columnsSplit, filter);
+
+            gridData.TotalRows = filteredData.Count();
             gridData.PageCount = count;
             gridData.TotalPages = Convert.ToInt32(Math.Ceiling((double)gridData.TotalRows / (double)gridData.PageCount));
 
@@ -47,36 +58,15 @@ namespace Ardent.DataGrid
             }
             gridData.CurrentPage = page;
 
-            //Sorting
-            if (!string.IsNullOrWhiteSpace(sort))
-            {
-                if (string.IsNullOrWhiteSpace(sortdir))
-                {
-                    sortdir = "asc";
-                }
-                items = items.OrderBy(sort + " " + sortdir);
-            }
-
             //Paging
             if (gridData.TotalRows > 0)
             {
-                items = items.Skip(count * (page - 1)).Take(count);
+                filteredData = filteredData.Skip(count * (page - 1)).Take(count).ToList();
             }
 
-            foreach (var item in items)
+            foreach (var item in filteredData)
             {
-                var itemData = new Dictionary<string, string>();
-
-                foreach (var column in columnsSplit)
-                {
-                    object property = GetPropertyFromString(item, column.Replace(" ", ""));
-                    if (property == null)
-                    {
-                        property = string.Empty;
-                    }
-                    itemData.Add(column.Replace(".", "_"), property.ToString());
-                }
-                gridData.Data.Add(itemData);
+                gridData.Data.Add(item);
             }
 
             return gridData;
@@ -108,19 +98,27 @@ namespace Ardent.DataGrid
             return null;
         }
 
-
-        private static IQueryable Filter(this IQueryable source, List<string> columns, List<string> filter)
+        private static List<Dictionary<String, String>> Filter(this IQueryable source, List<string> columns, List<string> filter)
         {
+
             var rowType = source.ElementType;
+            IList<String> nonQueryableColumns = new List<string>();
             for (int i = 0; i < filter.Count; i++)
             {
                 try
                 {
                     if (string.IsNullOrWhiteSpace(filter[i])) continue;
-
+                    
                     //check if the type is nullable
                     var prop = GetPropertyInfo(rowType, columns[i]);
                     var type = prop.PropertyType;
+
+                    if (rowType.GetProperty(columns[i]).GetCustomAttributes(true).Any(r => r.GetType() == typeof(NotDatagridQueryable)))
+                    {
+                        nonQueryableColumns.Add(columns[i]);
+                        continue;
+                    }
+                        
                     if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
                     {
                         //Its a fucking nullable!
@@ -133,8 +131,32 @@ namespace Ardent.DataGrid
                 }
                 catch { }
             }
+            var outData = new List<Dictionary<String, String>>();
+            foreach (var item in source)
+            {
+                var itemData = new Dictionary<string, string>();
+                Boolean doAdd = true;
+                foreach (var column in columns)
+                {
+                    object property = GetPropertyFromString(item, column.Replace(" ", ""));
+                    if (property == null)
+                    {
+                        property = string.Empty;
+                    }
 
-            return source;
+                    if (nonQueryableColumns.Any(c => c == column))
+                    {
+                        int index = columns.IndexOf(column);
+                        if (!String.IsNullOrEmpty(filter[index]) && filter[index] != property.ToString())
+                        {
+                            doAdd = false;
+                        }
+                    }
+                    itemData.Add(column.Replace(".", "_"), property.ToString());
+                }
+               if (doAdd) outData.Add(itemData);
+            }
+            return outData;
         }
 
         private static PropertyInfo GetPropertyInfo(Type type, string propName)
@@ -154,5 +176,8 @@ namespace Ardent.DataGrid
             return null;
         }
 
+        
     }
+    public class NotDatagridQueryable : System.Attribute
+    {}
 }

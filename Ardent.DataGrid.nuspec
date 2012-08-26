@@ -5,7 +5,7 @@
 		<version>0.1</version>
 		<authors>Damian Karzon, Ardent Leisure</authors>
 		<owners>Damian Karzon</owners>
-		<description>Generic Data Grid</description>
+		<description>Lightweight Generic Data Grid used for shop.dreamworld.com.au admin</description>
 		<language>en-AU</language>
 		<projectUrl>https://github.com/ArdentLeisure/DataGrid</projectUrl>
 		<tags>Datagrid</tags>
